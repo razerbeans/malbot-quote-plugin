@@ -10,15 +10,15 @@ class QuoteBot(Plugin):
 
   async def start(self) -> None:
     self.db = QuoteDatabase(self.database)
-  
-  @command.new("quote", require_subcommand=False)
+
+  @command.new("quote", aliases=["q"], require_subcommand=False)
   async def quote(self, evt: MessageEvent) -> None:
     fetched_quote = self.db.get()
     if fetched_quote:
       response = f"(#{fetched_quote['id']}) {fetched_quote['message']}"
     else:
       response = "The quote database is empty!"
-    await evt.reply()
+    await evt.reply(response)
 
   @quote.subcommand(help="Add a quote to the quote database")
   @command.argument("quote_body", pass_raw=True)
