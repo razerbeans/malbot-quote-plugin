@@ -1,0 +1,8 @@
+maubot: 0.1.0
+id: com.razerbeans.quotebot
+version: 0.0.14
+license: MIT
+modules:
+  - quotebot
+main_class: QuoteBot
+database: true
