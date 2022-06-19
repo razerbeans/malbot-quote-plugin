@@ -31,3 +31,6 @@ class QuoteDatabase:
 
   def add(self, date, message, submitter):
     self.db.execute(self.quotes.insert().values(date=date, message=message, submitter=submitter))
+
+  def delete(self, quote_id):
+    self.db.execute(self.quotes.delete().where(self.quotes.c.id == quote_id))
