@@ -29,5 +29,19 @@ class QuoteBot(Plugin):
   @quote.subcommand(help="Delete a specific quote by ID")
   @command.argument("quote_id")
   async def delete(self, evt: MessageEvent, quote_id: str) -> None:
-    self.db.delete(int(quote_id))
-    await evt.reply(f"Quote deleted!")
+    if evt.sender == "@razerbeans:matrix.gigafloppy.com":
+      self.db.delete(int(quote_id))
+      await evt.reply("Quote deleted!")
+    else:
+      await evt.reply("Get fucked")
+
+  @quote.subcommand(help="Add many quotes in bulk")
+  @command.argument("quotes", pass_raw=True)
+  async def bulk_add(self, evt: MessageEvent, quotes: str) -> None:
+    if evt.sender == "@razerbeans:matrix.gigafloppy.com":
+      new_quotes = quotes.split("\n")
+      for quote in new_quotes:
+        self.db.add(date=(datetime.datetime.fromtimestamp(evt.timestamp / 1000)), message=quote, submitter=evt.sender)
+      await evt.reply("All quotes have been added!")
+    else:
+      await evt.reply("No thanks.)")
