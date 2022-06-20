@@ -1,0 +1,9 @@
+# Who is allowed to use the bot?
+permissions:
+  whitelist:
+    add:
+      - ".*"
+    delete:
+      - "@user:example.com"
+    bulk_add:
+      - "@user:example.com"
