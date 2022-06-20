@@ -1,15 +1,25 @@
 import datetime
+import re
 
 from maubot import Plugin, MessageEvent
 from maubot.handlers import command
+from mautrix.util.config import BaseProxyConfig, ConfigUpdateHelper
+from typing import Type
 
 from .db import QuoteDatabase
+
+
+class Config(BaseProxyConfig):
+  def do_update(self, helper: ConfigUpdateHelper) -> None:
+    helper.copy_dict("permissions")
+
 
 class QuoteBot(Plugin):
   db: QuoteDatabase
 
   async def start(self) -> None:
     self.db = QuoteDatabase(self.database)
+    self.config.load_and_update()
 
   @command.new("quote", aliases=["q"], require_subcommand=False)
   async def quote(self, evt: MessageEvent) -> None:
@@ -45,3 +55,14 @@ class QuoteBot(Plugin):
       await evt.reply("All quotes have been added!")
     else:
       await evt.reply("No thanks.)")
+  
+  @classmethod
+  def get_config_class(cls) -> Type[BaseProxyConfig]:
+    return Config
+
+  def is_authorized(self, command, username):
+    whitelist = self.config['permissions']['whitelist'][command]
+    for whitelist_item in whitelist:
+      if re.fullmatch(whitelist_item, username):
+        return True
+    return False
