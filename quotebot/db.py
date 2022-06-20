@@ -1,5 +1,5 @@
 from sqlalchemy import (Column, String, Integer, Text, DateTime, ForeignKey, Table, MetaData,
-                        select, and_)
+                        select, and_, text)
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.sql.expression import func, select
 
@@ -34,3 +34,6 @@ class QuoteDatabase:
 
   def delete(self, quote_id):
     self.db.execute(self.quotes.delete().where(self.quotes.c.id == quote_id))
+
+  def last(self):
+    return self.db.execute(self.quotes.select().order_by(self.quotes.c.id.desc()).limit(1)).first()

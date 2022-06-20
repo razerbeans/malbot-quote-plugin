@@ -39,7 +39,7 @@ class QuoteBot(Plugin):
   @quote.subcommand(help="Delete a specific quote by ID")
   @command.argument("quote_id")
   async def delete(self, evt: MessageEvent, quote_id: str) -> None:
-    if evt.sender == "@razerbeans:matrix.gigafloppy.com":
+    if self.is_authorized("delete", evt.sender):
       self.db.delete(int(quote_id))
       await evt.reply("Quote deleted!")
     else:
@@ -48,7 +48,7 @@ class QuoteBot(Plugin):
   @quote.subcommand(help="Add many quotes in bulk")
   @command.argument("quotes", pass_raw=True)
   async def bulk_add(self, evt: MessageEvent, quotes: str) -> None:
-    if evt.sender == "@razerbeans:matrix.gigafloppy.com":
+    if self.is_authorized("delete", evt.sender):
       new_quotes = quotes.split("\n")
       for quote in new_quotes:
         self.db.add(date=(datetime.datetime.fromtimestamp(evt.timestamp / 1000)), message=quote, submitter=evt.sender)
@@ -56,6 +56,15 @@ class QuoteBot(Plugin):
     else:
       await evt.reply("No thanks.)")
   
+  @quote.subcommand(help="Fetch the most recent quote from the quote database")
+  async def last(self, evt: MessageEvent) -> None:
+    fetched_quote = self.db.last()
+    if fetched_quote:
+      response = f"(#{fetched_quote['id']}) {fetched_quote['message']}"
+    else:
+      response = "The quote database is empty!"
+    await evt.reply(response)
+
   @classmethod
   def get_config_class(cls) -> Type[BaseProxyConfig]:
     return Config

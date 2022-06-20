@@ -1,6 +1,6 @@
 maubot: 0.1.0
 id: com.razerbeans.quotebot
-version: 0.0.25
+version: 0.0.31
 license: MIT
 modules:
   - quotebot
