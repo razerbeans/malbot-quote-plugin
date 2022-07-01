@@ -1,8 +1,11 @@
 maubot: 0.1.0
 id: com.razerbeans.quotebot
-version: 0.0.24
+version: 0.0.31
 license: MIT
 modules:
   - quotebot
 main_class: QuoteBot
 database: true
+config: true
+extra_files:
+  - base-config.yaml
