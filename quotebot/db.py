@@ -37,3 +37,8 @@ class QuoteDatabase:
 
   def last(self):
     return self.db.execute(self.quotes.select().order_by(self.quotes.c.id.desc()).limit(1)).first()
+
+  def find(self, text):
+    result = self.db.execute(self.quotes.select().where(self.quotes.c.message.like("%{}%".format(text))).order_by(func.random()).limit(1))
+    if result:
+      return result.first()

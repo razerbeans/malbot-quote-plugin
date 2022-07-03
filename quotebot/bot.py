@@ -65,6 +65,16 @@ class QuoteBot(Plugin):
       response = "The quote database is empty!"
     await evt.reply(response)
 
+  @quote.subcommand(help="Find a quote containing the mentioned text")
+  @command.argument("text", pass_raw=True)
+  async def find(self, evt: MessageEvent, text: str) -> None:
+    fetched_quote = self.db.find(text)
+    if fetched_quote:
+      response = f"(#{fetched_quote['id']}) {fetched_quote['message']}"
+    else:
+      response = "Quote not found."
+    await evt.reply(response)
+
   @classmethod
   def get_config_class(cls) -> Type[BaseProxyConfig]:
     return Config
